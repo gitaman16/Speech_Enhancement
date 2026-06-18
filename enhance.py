@@ -29,7 +29,7 @@ from model.unet          import build_unet
 from audio.stft_utils    import wav_to_mag_phase, mag_phase_to_wav
 from evaluation.metrics  import calculate_metrics
 
-WEIGHTS_PATH = "models/unet_tf_weights.h5"
+WEIGHTS_PATH = "models/unet_tf_weights.weights.h5"
 SAMPLE_RATE  = 16000
 
 
@@ -177,7 +177,7 @@ def main():
     print("=" * 60)
 
     # ── Load model ────────────────────────────────────────────────────────────
-    if not os.path.exists(args.weights + ".index"):
+    if not os.path.exists(args.weights):
         sys.exit(
             f"Weights not found: {args.weights}\n"
             "Run weights/convert_weights.py first, or train from scratch with train.py."

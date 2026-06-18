@@ -25,7 +25,7 @@ from model.unet         import build_unet
 from audio.stft_utils   import wav_to_mag_phase, mag_phase_to_wav
 from evaluation.metrics import calculate_metrics
 
-WEIGHTS_PATH   = "models/unet_tf_weights.h5"
+WEIGHTS_PATH   = "models/unet_tf_weights.weights.h5"
 TEST_CLEAN_DIR = "test_set/clean"
 TEST_NOISY_DIR = "test_set/noisy"
 SAMPLE_RATE    = 16000
@@ -114,7 +114,7 @@ def plot_improvement_histogram(noisy_scores, enhanced_scores, metric_name):
 # ── Main evaluation loop ──────────────────────────────────────────────────────
 
 def evaluate():
-    if not os.path.exists(WEIGHTS_PATH + ".index"):
+    if not os.path.exists(WEIGHTS_PATH):
         sys.exit(
             f"Weights not found: {WEIGHTS_PATH}\n"
             "Run weights/convert_weights.py first, or train with train.py."

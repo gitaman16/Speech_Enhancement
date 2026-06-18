@@ -74,6 +74,11 @@ def mag_phase_to_wav(mag, phase, n_fft=N_FFT, hop=HOP_LENGTH, win=WIN_LENGTH, ta
         wav: float32 tensor [B, T]
     """
     # Combine enhanced magnitude with original phase: complex = mag * e^(j*phase)
+    min_freq = tf.minimum(tf.shape(mag)[1], tf.shape(phase)[1])
+    min_time = tf.minimum(tf.shape(mag)[2], tf.shape(phase)[2])
+    mag   = mag[:, :min_freq, :min_time]
+    phase = phase[:, :min_freq, :min_time]
+    
     real = mag * tf.cos(phase)
     imag = mag * tf.sin(phase)
     stft_complex = tf.complex(real, imag)  # [B, freq_bins, time_frames]

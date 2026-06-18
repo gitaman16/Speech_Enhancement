@@ -102,20 +102,25 @@ class UNet(tf.keras.Model):
     def _upsample_and_fuse(self, upsample_layer, conv_block, x, skip, training):
         """Upsample x, align with skip connection, concatenate, then convolve."""
         x = upsample_layer(x)
-        x = self._match_size(x, skip)
+        x, skip = self._match_size(x, skip)
         x = tf.concat([x, skip], axis=-1)  # concatenate along channel axis
         return conv_block(x, training=training)
 
-    @staticmethod
-    def _match_size(x, target):
-        """Crop x to match target's spatial dimensions (freq and time axes).
+    # @staticmethod
+    # def _match_size(x, target):
+    #     """Crop x to match target's spatial dimensions (freq and time axes).
 
-        Slight mismatches can occur after transposed convolution when input
-        dimensions are odd. Cropping is cheaper and more stable than padding.
-        """
-        target_h = tf.shape(target)[1]
-        target_w = tf.shape(target)[2]
-        return x[:, :target_h, :target_w, :]
+    #     Slight mismatches can occur after transposed convolution when input
+    #     dimensions are odd. Cropping is cheaper and more stable than padding.
+    #     """
+    #     target_h = tf.shape(target)[1]
+    #     target_w = tf.shape(target)[2]
+    #     return x[:, :target_h, :target_w, :]
+    @staticmethod
+    def _match_size(x, skip):
+        min_h = tf.minimum(tf.shape(x)[1], tf.shape(skip)[1])
+        min_w = tf.minimum(tf.shape(x)[2], tf.shape(skip)[2])
+        return x[:, :min_h, :min_w, :], skip[:, :min_h, :min_w, :]
 
 
 def build_unet():

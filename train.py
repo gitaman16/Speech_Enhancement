@@ -126,7 +126,7 @@ def train():
     # ── Optional: resume from checkpoint ─────────────────────────────────────
     start_epoch = 0
     if RESUME_FROM:
-        if not os.path.exists(RESUME_FROM + ".index"):
+        if not os.path.exists(RESUME_FROM):
             sys.exit(f"Checkpoint not found: {RESUME_FROM}")
         model.load_weights(RESUME_FROM)
         # Parse epoch number from filename, e.g. "models/checkpoint_epoch_15.h5"
@@ -158,12 +158,12 @@ def train():
 
         # Save checkpoint
         if (epoch + 1) % CHECKPOINT_INTERVAL == 0:
-            ckpt_path = os.path.join(WEIGHTS_DIR, f"checkpoint_epoch_{epoch + 1}.h5")
+            ckpt_path = os.path.join(WEIGHTS_DIR, f"checkpoint_epoch_{epoch + 1}.weights.h5")
             model.save_weights(ckpt_path)
             print(f"  ✓ Checkpoint saved → {ckpt_path}")
 
     # ── Save final weights ────────────────────────────────────────────────────
-    final_path = os.path.join(WEIGHTS_DIR, "unet_tf_weights.h5")
+    final_path = os.path.join(WEIGHTS_DIR, "unet_tf_weights.weights.h5")
     model.save_weights(final_path)
 
     print("\n" + "=" * 60)

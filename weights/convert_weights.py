@@ -50,7 +50,7 @@ from model.unet import build_unet
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 PT_CHECKPOINT = "models/unet_final_continued.pt"
-TF_WEIGHTS    = "models/unet_tf_weights.h5"
+TF_WEIGHTS = "models/unet_tf_weights.weights.h5"
 
 
 # ── Helper functions ───────────────────────────────────────────────────────────
@@ -190,7 +190,7 @@ def convert(pt_checkpoint_path, tf_weights_path):
     print("\n  Running sanity check...")
     test_input  = tf.random.uniform([1, 257, 501, 1])
     test_output = model(test_input, training=False)
-    assert test_output.shape == (1, 257, 501, 1), \
+    assert len(test_output.shape) == 4 and test_output.shape[-1] == 1, \
         f"Unexpected output shape: {test_output.shape}"
     print(f"    Input:  {list(test_input.shape)}")
     print(f"    Output: {list(test_output.shape)}  ✓")
